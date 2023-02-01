@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+
 
 import org.firstinspires.ftc.teamcode.InstancedClasses.*;
 
@@ -29,13 +31,14 @@ public class Autonomous2022 extends LinearOpMode {
     private TouchSensor limit;
     
     public double fwdPower;
-    String signal;
+    int signal;
     int tol = 5;
     double angTol = .5;
     int enc = 0;
     int angle = 0;
 
     Motors Motors;
+    AprilTags AprilTags;
 
     public void Run() {
         // Override this method to run the commands below.
@@ -75,8 +78,7 @@ public class Autonomous2022 extends LinearOpMode {
     @Override
     public void runOpMode() {
         
-        telemetry.addData("Status", "INITIALIZING: PLEASE WAIT");
-        telemetry.update();
+        telemetry.addData("Status", "INITIALIZING: PLEASE WAIT"); telemetry.update();
         
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -87,23 +89,30 @@ public class Autonomous2022 extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "spool");
         claw = hardwareMap.get(Servo.class, "claw");
         limit = hardwareMap.get(TouchSensor.class, "calibrateSwitch");
-        
+
+        telemetry.addData("Status", "Initializing Motors..."); telemetry.update();
         Motors = new Motors(wheelFL, wheelFR, wheelRL, wheelRR, imu,  new int[]{0,500,2700,4600,6500}, arm, claw);
-        TensorVuforia tv = new TensorVuforia(hardwareMap.get(WebcamName.class, "Webcam 1"), false);
-        
+
+        //TensorVuforia tv = new TensorVuforia(hardwareMap.get(WebcamName.class, "Webcam 1"), false);
+
+        telemetry.addData("Status", "Initializing AprilTags..."); telemetry.update();
+        AprilTags = new AprilTags(hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()), hardwareMap.get(WebcamName.class, "Webcam 1"));
+
+        telemetry.addData("Status", "INITIALIZING: PLEASE WAIT"); telemetry.update();
+
         Motors.initArm(gamepad1, limit);
         
         while(opModeInInit()) {
             telemetry.addData("Status", "Initialized. Press Play to begin");
-            telemetry.addData("Signal", tv.tfid());
+            telemetry.addData("Signal", AprilTags.getTagId());
             telemetry.update();
         }
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         telemetry.addData("Status", "Running");
         
-        signal = tv.tfid();
-        String found = "";
+        signal = AprilTags.getTagId();
+        //String found = "";
         
         // run until the end of the match (driver presses STOP)
         Run();

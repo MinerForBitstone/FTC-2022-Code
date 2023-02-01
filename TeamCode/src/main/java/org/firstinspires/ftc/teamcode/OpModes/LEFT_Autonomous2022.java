@@ -16,17 +16,17 @@ public class LEFT_Autonomous2022 extends Autonomous2022 {
         Move(0, false, 0, 4, false);
         Move(-.37, false, 0, 4, false);
         
-        if          (signal == "3 Panel") {
+        if          (signal == 3) {
             Move(0, false, 45, 0, false);
             Move(0.5, false, 0, 0, false);
             
-        } else if   (signal == "2 Bulb") {
+        } else if   (signal == 2) {
             Move(0, false, -45, 0, false);
             Move(-1, false, 0, 0, false);
             Move(0, false, 90, 0, false);
             Move(0.5, false, 0, 0, false);
             
-        } else if   (signal == "1 Bolt") {
+        } else if   (signal == 1) {
             Move(0, false, -45, 0, false);
             Move(-2, false, 0, 0, false);
             Move(0, false, 90, 0, false);
